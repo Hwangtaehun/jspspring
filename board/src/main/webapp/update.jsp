@@ -1,8 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    
-<%@ page import="java.sql.*" %>
-<%@ page import="java.time.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ page import="com.board.db.*" %>
 
 <%
 	request.setCharacterEncoding("utf-8");
@@ -26,26 +23,17 @@
 		return;
 	}
 	
-	// 입력된 내용으로 새 글 레코드 추가
-	Class.forName("org.mariadb.jdbc.Driver");
-	try(
-		Connection conn = DriverManager.getConnection(
-			"jdbc:mariadb://localhost:3306/jspdb", "jsp", "1234");
-			Statement stmt = conn.createStatement();
-		) {
-			// 현재 시간 얻기
-			String curTime = LocalDate.now() + " " +
-							 LocalTime.now().toString().substring(0, 0);
-			
-			// 쿼리 실행
-			stmt.executeUpdate(String.format(
-					"update board set writer='%s', title='%s'," +
-					"content='%s', regtime='%s' where num=%d",
-					writer, title, content, curTime, num));
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+	// 글 데이터를 DTO에 저장
+	BoardDto dto = new BoardDto();
 	
-		// 목록보기 화면으로 돌아감
-		response.sendRedirect("view.jsp?num=" + num);
+	dto.setNum(num);
+	dto.setWriter(writer);
+	dto.setTitle(title);
+	dto.setContent(content);
+	
+	// 입력된 내용으로 글 내용 업데이트
+	new BoardDao().updateOne(dto);
+	
+	// 목록보기 화면으로 돌아감
+	response.sendRedirect("view.jsp?num=" + num);
 %>

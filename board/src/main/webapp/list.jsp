@@ -1,7 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
-<%@ page import="java.sql.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="com.board.db.*" %>
+
+<%
+	// 게시글이 담긴 DTO객체들의 리스트를 얻음
+	ArrayList<BoardDto> dtoList = new BoardDao().selectList();
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,36 +38,22 @@
 		<th>조회수</th>
 	</tr>
 <%
-	// 게시글 리스트 읽어오기
-	Class.forName("org.mariadb.jdbc.Driver");
-	try (
-		Connection conn = DriverManager.getConnection(
-				"jdbc:mariadb://localhost:3306/jspdb", "jsp", "1234");
-		Statement stmt = conn.createStatement();
-			
-		// 쿼리 실행
-		ResultSet rs = stmt.executeQuery(
-				"select * from board order by num desc");
-		) {
-			// 게시글 레코드가 남아있는 동안 반복하며 화면에 출력
-			while (rs.next()) {
-%>
-		<tr>
-			<td><%=rs.getInt("num")%></td>
-			<td style="text-align:left;">
-				<a href="view.jsp?num=<%=rs.getInt("num")%>">
-					<%=rs.getString("title")%>
-				</a>
-			</td>
-			<td><%=rs.getString("writer")%></td>
-			<td><%=rs.getString("regtime")%></td>
-			<td><%=rs.getInt("hits")%></td>
-		</tr>
-<%				
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+	// 리스트의 모든 DTO 객체의 내용을 화면에 출력
+	for(BoardDto dto : dtoList) {
+%>	
+	<tr>
+		<td><%=dto.getNum()%></td>
+		<td style="text-align:left;">
+			<a href="view.jsp?num=<%=dto.getNum()%>">
+				<%=dto.getTitle()%>
+			</a>
+		</td>
+		<td><%=dto.getWriter()%></td>
+		<td><%=dto.getRegtime()%></td>
+		<td><%=dto.getHits()%></td>
+	</tr>
+<%
+	}
 %>
 </table>
 

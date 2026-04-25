@@ -1,48 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
-<%@ page import="java.sql.*" %>
+<%@ page import="com.board.db.*" %> 
 
 <%
-	// 지정된 글 번호 얻기
+	// 지정된 글 번호의 글을 DB에서 읽음
 	int num = Integer.parseInt(request.getParameter("num"));
+	BoardDto dto = new BoardDao().selectOne(num, true);
 
-	// 게시글 데이터를 담을 변수 정의
-	String writer  = "";
-	String title   = "";
-	String content = "";
-	String regtime = "";
 	int    hits    = 0;
-	
-	// 지정된 글 번호를 가진 레코드 읽기
-	Class.forName("org.mariadb.jdbc.Driver");
-	try (
-		Connection conn = DriverManager.getConnection(
-				"jdbc:mariadb://localhost:3306/jspdb", "jsp", "1234");
-		Statement stmt = conn.createStatement();
 			
-		// 쿼리 실행
-		ResultSet rs = stmt.executeQuery("select * from board where num=" + num);
-	) {
-		if (rs.next()) {
-			// 글 데이터를 변수에 저장
-			writer  = rs.getString("writer");
-			title   = rs.getString("title");
-			content = rs.getString("content");
-			regtime = rs.getString("regtime");
-			hits    = rs.getInt("hits");
-			
-			// 글 제목과 내용이 웹 페이지에 몰바르게 출력되도록
-			// 공백과 줄 바꿈 처리
-			title   = title.replace(" ", "&nbsp;");
-			content = content.replace(" ", "&nbsp;").replace("\n", "<br>");
-			
-			// 이 글의 조회수를 1 올림
-			stmt.executeUpdate("update board set hits=hits+1 where num=" + num);
-		}
-	} catch(Exception e) {
-		e.printStackTrace();
-	}
+	// 글 제목과 내용이 웹 페이지에 몰바르게 출력되도록
+	// 공백과 줄 바꿈 처리
+	dto.setTitle(dto.getTitle().replace(" ", "&nbsp;"));
+	dto.setContent(dto.getContent().replace(" ", "&nbsp;").replace("\n", "<br>"));
 %>
 
 <!DOCTYPE html>
@@ -60,23 +31,23 @@
 <table>
 	<tr>
 		<th>제목</th>
-		<td><%=title%></td>
+		<td><%=dto.getTitle()%></td>
 	</tr>
 	<tr>
 		<th>작성자</th>
-		<td><%=writer%></td>
+		<td><%=dto.getWriter()%></td>
 	</tr>
 	<tr>
 		<th>작성일자</th>
-		<td><%=regtime%></td>
+		<td><%=dto.getRegtime()%></td>
 	</tr>
 	<tr>
 		<th>조회수</th>
-		<td><%=hits%></td>
+		<td><%=dto.getHits()%></td>
 	</tr>
 	<tr>
 		<th>내용</th>
-		<td><%=content%></td>
+		<td><%=dto.getContent()%></td>
 	</tr>
 </table>
 
