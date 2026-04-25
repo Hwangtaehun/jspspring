@@ -14,6 +14,9 @@
 	// 공백과 줄 바꿈 처리
 	dto.setTitle(dto.getTitle().replace(" ", "&nbsp;"));
 	dto.setContent(dto.getContent().replace(" ", "&nbsp;").replace("\n", "<br>"));
+	
+	// DTO 객체를 request의 속성 "msg"로 등록
+	request.setAttribute("msg", dto);
 %>
 
 <!DOCTYPE html>
@@ -31,30 +34,30 @@
 <table>
 	<tr>
 		<th>제목</th>
-		<td><%=dto.getTitle()%></td>
+		<td>${msg.title}</td>
 	</tr>
 	<tr>
 		<th>작성자</th>
-		<td><%=dto.getWriter()%></td>
+		<td>${msg.writer}</td>
 	</tr>
 	<tr>
 		<th>작성일자</th>
-		<td><%=dto.getRegtime()%></td>
+		<td>${msg.regtime}</td>
 	</tr>
 	<tr>
 		<th>조회수</th>
-		<td><%=dto.getHits()%></td>
+		<td>${msg.hits}</td>
 	</tr>
 	<tr>
 		<th>내용</th>
-		<td><%=dto.getContent()%></td>
+		<td>${msg.content}</td>
 	</tr>
 </table>
 
 <br>
 <input type="button" value="목록보기" onclick="location.href='list.jsp'">
-<input type="button" value="수정" onclick="location.href='write.jsp?num=<%=num%>'">
-<input type="button" value="삭제" onclick="location.href='delete.jsp?num=<%=num%>'">
+<input type="button" value="수정" onclick="location.href='write.jsp?num=${param.num}'">
+<input type="button" value="삭제" onclick="location.href='delete.jsp?num=${param.num}'">
 
 </body>
 </html>

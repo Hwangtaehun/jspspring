@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    
 <%@ page import="java.util.*" %>
 <%@ page import="com.board.db.*" %>
 
 <%
-	// 게시글이 담긴 DTO객체들의 리스트를 얻음
-	ArrayList<BoardDto> dtoList = new BoardDao().selectList();
+	// 게시글이 담긴 DTO객체들의 리스트를 request의 속성 "msgList"로 등록
+	request.setAttribute("msgList", new BoardDao().selectList());
 %>
 
 <!DOCTYPE html>
@@ -37,24 +39,20 @@
 		<th class="regtime">작성일시</th>
 		<th>조회수</th>
 	</tr>
-<%
-	// 리스트의 모든 DTO 객체의 내용을 화면에 출력
-	for(BoardDto dto : dtoList) {
-%>	
+	<!-- 리스트의 모든 DTO 객체의 내용을 화면에 출력 -->
+	<c:forEach var="msg" items="${msgList}">
 	<tr>
-		<td><%=dto.getNum()%></td>
+		<td>${msg.num}</td>
 		<td style="text-align:left;">
-			<a href="view.jsp?num=<%=dto.getNum()%>">
-				<%=dto.getTitle()%>
+			<a href="view.jsp?num=${msg.num}">
+				${msg.title}
 			</a>
 		</td>
-		<td><%=dto.getWriter()%></td>
-		<td><%=dto.getRegtime()%></td>
-		<td><%=dto.getHits()%></td>
+		<td>${msg.writer}</td>
+		<td>${msg.regtime}</td>
+		<td>${msg.hits}</td>
 	</tr>
-<%
-	}
-%>
+	</c:forEach>
 </table>
 
 <br>
