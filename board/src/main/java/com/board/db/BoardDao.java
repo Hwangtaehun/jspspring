@@ -5,6 +5,7 @@ import java.time.*;
 import java.util.*;
 
 public class BoardDao {
+	// DB에 접속하여 Connection 객체를 반환
 	private Connection getConnection() throws Exception {
 		Class.forName("org.mariadb.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(
@@ -13,13 +14,33 @@ public class BoardDao {
 		return conn;
 	}
 	
+	// 현재 시간을 문자열 형태로 반환
 	private String getCurrentTime() {
 		return LocalDate.now() + " " + LocalTime.now().toString().substring(0, 8);
 	}
 	
+	// 게시글 갯수 얻기
+	public int getNumRecords() {
+		int numRecords = 0;
+		
+		try(
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
+			
+			ResultSet rs = stmt.executeQuery("select count(*) from board");
+		) {
+			if(rs.next()) {
+				numRecords = rs.getInt(1);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return numRecords;
+	}
+	
 	// 지정된 글 번호의 레코드를 DB에서 삭제
 	public void deleteOne(int num) {
-		
 		try(
 			Connection conn = getConnection();
 			Statement stmt = conn.createStatement();
@@ -28,7 +49,6 @@ public class BoardDao {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public BoardDto selectOne(int num, boolean incHits) {
@@ -67,7 +87,7 @@ public class BoardDao {
 		return dto;
 	}
 	
-	public ArrayList<BoardDto> selectList() {
+	public ArrayList<BoardDto> selectList(int start, int listSize) {
 		ArrayList<BoardDto> dtoList = new ArrayList<BoardDto>();
 		
 		try (
@@ -76,7 +96,7 @@ public class BoardDao {
 				
 			// 쿼리 실행
 			ResultSet rs = stmt.executeQuery(
-					"select * from board order by num desc");
+					String.format("select * from board order by num desc limit %d, %d", start, listSize));
 		) {
 			// 게시글 레코드가 남아있는 동안 반복하며 화면에 출력
 			while (rs.next()) {

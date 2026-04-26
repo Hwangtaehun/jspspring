@@ -51,6 +51,22 @@
 </table>
 
 <br>
+<div style="width:680px; text-align:center;">
+	<c:forEach var="pgn" items="${pgnList}">
+		<a class="pgn" href="list?page=${pgn.pageNo}">
+			<c:choose>
+				<c:when test="${pgn.curPage}">
+					<u>${pgn.display}</u>
+				</c:when>
+				<c:otherwise>
+					${pgn.display}
+				</c:otherwise>
+			</c:choose>
+		</a>
+	</c:forEach>
+</div>
+
+<br>
 <input type="button" value="글쓰기" onclick="location.href='write'">
 
 </body>

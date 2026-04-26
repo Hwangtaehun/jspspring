@@ -45,6 +45,7 @@ public class BoardController extends HttpServlet {
 			
 			// 게시글이 담긴 DTO객체들의 리스트를 request의 속성 "msgList"로 등록
 			request.setAttribute("msgList", new BoardService().getMsgList(pageNo));
+			request.setAttribute("pgnList", new BoardService().getPagination(pageNo));
 			view = "list.jsp";
 		} else if(com.equals("/view")) {
 			// 지정된 글 번호의 글을 DB에서 읽음

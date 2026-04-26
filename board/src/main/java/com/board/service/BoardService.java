@@ -5,6 +5,39 @@ import com.board.db.*;
 
 public class BoardService {
 	private static final int listSize = 5;
+	private static final int paginationSize = 3;
+	
+	public ArrayList<Pagination> getPagination(int pageNo) {
+		ArrayList<Pagination> pgnList = new ArrayList<Pagination>();
+		
+		int numRecords = new BoardDao().getNumRecords();
+		int numPages = (int)Math.ceil((double)numRecords/listSize);
+		
+		int firstLink = ((pageNo - 1) / paginationSize) * paginationSize + 1;
+		int lastLink = firstLink + paginationSize - 1;
+		
+		if(lastLink > numPages) {
+			lastLink = numPages;
+		}
+		
+		if(firstLink > 1) {
+			pgnList.add(new Pagination("이전", pageNo - paginationSize, false));
+		}
+		
+		for (int i = firstLink; i <= lastLink; i++) {
+			pgnList.add(new Pagination("" + i, i, i == pageNo));
+		}
+		
+		if(lastLink < numPages) {
+			int tmpPageNo = pageNo + paginationSize;
+			if(tmpPageNo > numPages) {
+				tmpPageNo = numPages;
+			}
+			pgnList.add(new Pagination("다음", tmpPageNo, false));
+		}
+		
+		return pgnList;
+	}
 	
 	public ArrayList<BoardDto> getMsgList(int pageNo) {
 		return new BoardDao().selectList((pageNo - 1) * listSize, listSize);
