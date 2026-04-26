@@ -6,11 +6,6 @@
 <%@ page import="java.util.*" %>
 <%@ page import="com.board.db.*" %>
 
-<%
-	// 게시글이 담긴 DTO객체들의 리스트를 request의 속성 "msgList"로 등록
-	request.setAttribute("msgList", new BoardDao().selectList());
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,7 +39,7 @@
 	<tr>
 		<td>${msg.num}</td>
 		<td style="text-align:left;">
-			<a href="view.jsp?num=${msg.num}">
+			<a href="view?num=${msg.num}">
 				${msg.title}
 			</a>
 		</td>
@@ -56,7 +51,7 @@
 </table>
 
 <br>
-<input type="button" value="글쓰기" onclick="location.href='write.jsp'">
+<input type="button" value="글쓰기" onclick="location.href='write'">
 
 </body>
 </html>

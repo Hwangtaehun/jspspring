@@ -35,5 +35,5 @@
 	new BoardDao().updateOne(dto);
 	
 	// 목록보기 화면으로 돌아감
-	response.sendRedirect("view.jsp?num=" + num);
+	response.sendRedirect("view?num=" + num);
 %>

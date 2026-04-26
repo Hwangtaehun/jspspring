@@ -1,25 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.board.db.*" %>
-
-<%
-	// 글 번호 값 얻기, 주어지지 않았으면 0으로 설정
-	String tmp = request.getParameter("num");
-	int num = (tmp != null && tmp.length() > 0) ? Integer.parseInt(tmp) : 0;
-
-	// 새 글쓰기 모드를 가정하고 변수 초기값 설정
-	BoardDto dto = new BoardDto();
-	String action  = "insert.jsp";
-	
-	// 글 번호가 주어졌으면, 글 수정 모드
-	if(num > 0) {
-		dto = new BoardDao().selectOne(num, false);
-		action = "update.jsp?num=" + num;
-	}
-	
-	// DTO 객체와 form의 action을 request에 등록
-	request.setAttribute("msg", dto);
-	request.setAttribute("action", action);
-%>
     
 <!DOCTYPE html>
 <html>
