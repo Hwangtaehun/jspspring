@@ -41,4 +41,10 @@ public class BookServiceImpl implements BookService {
 		return booksByFilter;
 	}
 
+	@Override
+	public void setNewBook(Book book) {
+		// TODO Auto-generated method stub
+		bookRepository.setNewBook(book);
+	}
+
 }
