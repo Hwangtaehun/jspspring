@@ -25,7 +25,7 @@
 		<div class="row align-items-md-stretch text-center">
 			<div class = "col-md-12"">
 				<h3 th:text="${book.name}"></h3>
-				<p th:text="${book.description"></p>
+				<p th:text="${book.description}"></p>
 				<br>
 				<p><b>도서코드 : </b><span class="badge text-bg-info" th:text="${book.bookId}"></span>
 				<p><b>저자</b> : <span th:text="${book.author}">
@@ -36,7 +36,7 @@
 				<h4 th:text="${book.unitPrice}+'원'"></h4>
 				<br>
 				<p><a th:href="#" class="btn btn-Secondary">도서주문 &raquo;</a>
-				<a herf="/BookMarket/books" class="btn btn-secondary">도서 목록&requo;</a>
+				<a herf="/Bookmarket/books" class="btn btn-secondary">도서 목록&requo;</a>
 			</div>
 		</div>
   

@@ -1,7 +1,11 @@
 package com.springboot.repository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.stereotype.Repository;
 import com.springboot.domain.Book;
 
@@ -76,4 +80,45 @@ public class BookRepositoryImpl implements BookRepository {
 		return bookInfo;
 	}
 
+	@Override
+	public List<Book> getBookListByCategory(String category) {
+		// TODO Auto-generated method stub
+		List<Book> booksByCategory = new ArrayList<Book>();
+		for(int i = 0; i < listOfBooks.size(); i++) {
+			Book book = listOfBooks.get(i);
+			if(category.equalsIgnoreCase(book.getCategory()))
+				booksByCategory.add(book);
+		}
+		return booksByCategory;
+	}
+
+	@Override
+	public Set<Book> getBookListByFilter(Map<String, List<String>> filter) {
+		// TODO Auto-generated method stub
+		Set<Book> booksByPublisher = new HashSet<Book>();
+		Set<Book> booksByCategory = new HashSet<Book>();
+		Set<String> booksByFilter = filter.keySet();
+		
+		if(booksByFilter.contains("publish")) {
+			for(int j = 0; j < filter.get("publisher").size(); j++) {
+				String pubisherName = filter.get("publisher").get(j);
+				for (int i = 0; i < listOfBooks.size(); i++) {
+					Book book = listOfBooks.get(i);
+					if(pubisherName.equalsIgnoreCase(book.getPublisher()))
+						booksByPublisher.add(book);
+				}
+			}
+		}
+		
+		if(booksByFilter.contains("category")) {
+			for(int i = 0; i < filter.get("category").size(); i++) {
+				String category = filter.get("category").get(i);
+				List<Book> list = getBookListByCategory(category);
+				booksByCategory.addAll(list);
+			}
+		}
+		
+		booksByCategory.retainAll(booksByCategory);
+		return booksByCategory;
+	}
 }
