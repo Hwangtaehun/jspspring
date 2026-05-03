@@ -17,4 +17,11 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.getAllBookList();
 	}
 
+	@Override
+	public Book getBookById(String bookId) {
+		// TODO Auto-generated method stub
+		Book bookById = bookRepository.getBookById(bookId);
+		return bookById;
+	}
+
 }
