@@ -7,6 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.springboot.domain.Book;
 import com.springboot.service.BookService;
 
@@ -24,9 +27,18 @@ public class BookController {
 	}
 	
 	@GetMapping("/all")
-	public String requestAllBooks(Model model) {
+	public ModelAndView requestAllBooks() {
+		ModelAndView modelAndView = new ModelAndView();
 		List<Book> list = bookService.getAllBookList();
-		model.addAttribute("bookList", list);
-		return "books";
+		modelAndView.addObject("bookList", list);
+		modelAndView.setViewName("books");
+		return modelAndView;
+	}
+	
+	@GetMapping("/book")
+	public String requestBookById(@RequestParam("id") String bookId, Model model) {
+		Book bookById = bookService.getBookById(bookId);
+		model.addAttribute("book", bookById);
+		return "book";
 	}
 }
