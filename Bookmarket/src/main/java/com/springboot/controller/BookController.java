@@ -21,4 +21,11 @@ public class BookController {
 		model.addAttribute("bookList", list);
 		return "books";
 	}
+	
+	@RequestMapping("/all")
+	public String requestAllBooks(Model model) {
+		List<Book> list = bookService.getAllBookList();
+		model.addAttribute("bookList", list);
+		return "books";
+	}
 }
