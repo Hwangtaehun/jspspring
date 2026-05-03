@@ -10,11 +10,12 @@ import com.springboot.domain.Book;
 import com.springboot.service.BookService;
 
 @Controller
+@RequestMapping(value="/books")
 public class BookController {
 	@Autowired
 	private BookService bookService;
 	
-	@RequestMapping(value="/books",method = RequestMethod.GET)
+	@RequestMapping
 	public String requestBookList(Model model) {
 		List<Book> list = bookService.getAllBookList();
 		model.addAttribute("bookList", list);
