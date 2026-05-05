@@ -42,14 +42,21 @@ public class SecurityConfig {
         		.anyRequest().permitAll()
         )
         .formLogin(
-        	formLogin->formLogin
-        	loginPage("/login")
-        	.loginProcessingUrl("/login")
-        	.defaultSuccessUrl("/books/add")
-        	.failureUrl("/loginfailed")
-        	.usernameParameter("username")
-        	.passwordParameter("password")
-        ); 
+            	formLogin->formLogin    
+    		    .loginPage("/login") 
+    		    .loginProcessingUrl("/login")
+    		    .defaultSuccessUrl("/books/add")
+    		    .failureUrl("/loginfailed")
+     			.usernameParameter("username")
+     			.passwordParameter("password")
+     			
+        )
+        .logout(
+        		logout -> logout
+        		.logoutUrl("/logout")
+        		.logoutSuccessUrl("/login")
+        );
+		
 		return http.build();
 	}
 }
