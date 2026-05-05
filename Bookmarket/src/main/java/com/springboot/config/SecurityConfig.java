@@ -23,25 +23,33 @@ public class SecurityConfig {
 	}
 	
 	@Bean
-	protected UserDetailsService users() {
+	protected UserDetailsService users() {		
 		UserDetails admin = User.builder()
-				.username("Admin")
-				.password(passwordEncoder().encode("Admin1234"))
-				.roles("ADMIN")
-				.build();
+			.username("Admin")
+			.password(passwordEncoder().encode("Admin1234"))
+			.roles("ADMIN")
+			.build();
 		return new InMemoryUserDetailsManager(admin);
 	}
 	
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
-		.csrf(AbstractHttpConfigurer::disable)
-		.authorizeHttpRequests(
-			authorizeRequests -> authorizeRequests
-			.requestMatchers("/books/add").hasRole("ADMIN")
-			.anyRequest().permitAll()
-		)
-		.formLogin(Customizer.withDefaults());
+    	.csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
+        		authorizeRequests -> authorizeRequests            
+        		.requestMatchers("/books/add").hasRole("ADMIN" )      
+        		.anyRequest().permitAll()
+        )
+        .formLogin(
+        	formLogin->formLogin
+        	loginPage("/login")
+        	.loginProcessingUrl("/login")
+        	.defaultSuccessUrl("/books/add")
+        	.failureUrl("/loginfailed")
+        	.usernameParameter("username")
+        	.passwordParameter("password")
+        ); 
 		return http.build();
 	}
 }
