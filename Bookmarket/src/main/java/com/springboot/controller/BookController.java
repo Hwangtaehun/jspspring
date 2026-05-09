@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.MatrixVariable;
@@ -28,10 +29,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.springboot.domain.Book;
+import com.springboot.exception.BookIdException;
+import com.springboot.exception.CategoryException;
 import com.springboot.service.BookService;
 import com.springboot.validator.BookValidator;
 import com.springboot.validator.UnitsInStockValidator;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
@@ -74,6 +78,9 @@ public class BookController {
 	@GetMapping("/{category}")
 	public String requestBooksByCategory (@PathVariable("category")String bookCategory, Model model) {
 		List<Book> booksByCategory = bookService.getBookListByCategory(bookCategory);
+		if(booksByCategory == null || booksByCategory.isEmpty()) {
+			throw new CategoryException();
+		}
 		model.addAttribute("bookList", booksByCategory);
 		return "books";
 	}
@@ -134,5 +141,15 @@ public class BookController {
 	public void initBinder(WebDataBinder binder) {
 		binder.setValidator(bookValidator);
 		binder.setAllowedFields("bookId","name","unitPrice","author","description","publisher","category","unitsInStock","totalPage","releaseDate","condition", "bookImage");
+	}
+	
+	@ExceptionHandler(value= {BookIdException.class})
+	public ModelAndView handleError(HttpServletRequest req, BookIdException exception) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("invalidBookId", exception.getBookId());
+		mav.addObject("exception", exception);
+		mav.addObject("url", req.getRequestURI()+"?"+req.getQueryString());
+		mav.setViewName("errorBook");
+		return mav;
 	}
 }
