@@ -15,7 +15,7 @@ public class AuditingInterceptor implements HandlerInterceptor {
 	private String user;
 	private String bookId;
 	
-	public boolean preHandler(HttpServletRequest request, HttpServletResponse arg1, Object handler) throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse arg1, Object handler) throws Exception {
 		if(request.getRequestURI().endsWith("books/add") && request.getMethod().equals("POST")) {
 			user = request.getRemoteUser();
 			bookId = request.getParameterValues("bookId")[0];

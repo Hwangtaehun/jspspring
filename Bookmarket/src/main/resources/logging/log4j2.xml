@@ -6,7 +6,7 @@
         </Property>
         <Property name="BASE_DIR">
             D:/log
-        </Properties>
+        </Property>
     </Properties>
     
     <Appenders>
