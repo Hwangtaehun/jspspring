@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,12 +58,12 @@ public class CartController {
 		return cartService.read(cartId);
 	}
 	
-	@PutMapping("/book/{bookId}")
+	@PutMapping("/book/{bookId}")   
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void addCartByNewItem(@PathVariable("bookId") String bookId, HttpServletRequest request) {
 		String sessionId = request.getSession(true).getId();
 		Cart cart = cartService.read(sessionId);
-		
+	
 		if(cart == null) {
 			cart = cartService.create(new Cart(sessionId));
 		}
@@ -71,7 +72,33 @@ public class CartController {
 		if(book == null) {
 			throw new IllegalArgumentException(new BookIdException(bookId));
 		}
+		
 		cart.addCartItem(new CartItem(book));
 		cartService.update(sessionId, cart);
+	}
+	
+	@DeleteMapping("/book/{bookId}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void removeCartByItem(@PathVariable("bookId") String bookId, HttpServletRequest request) {
+		String sessionId = request.getSession(true).getId();
+		Cart cart = cartService.read(sessionId);
+	
+		if(cart == null) {
+			cart = cartService.create(new Cart(sessionId));
+		}
+		
+		Book book = bookService.getBookById(bookId);
+		if(book == null) {
+			throw new IllegalArgumentException(new BookIdException(bookId));
+		}
+		
+		cart.removeCartItem(new CartItem(book));
+		cartService.update(sessionId, cart);
+	}
+	
+	@DeleteMapping("/{cartId}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void deleteCartList(@PathVariable("cartId") String cartId) {
+		cartService.delete(cartId);
 	}
 }

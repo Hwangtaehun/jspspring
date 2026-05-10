@@ -28,4 +28,10 @@ public class CartServiceImpl implements CartService {
 		// TODO Auto-generated method stub
 		cartRepository.update(cartId, cart);
 	}
+
+	@Override
+	public void delete(String cartId) {
+		// TODO Auto-generated method stub
+		cartRepository.delete(cartId);
+	}
 }

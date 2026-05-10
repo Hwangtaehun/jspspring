@@ -23,21 +23,28 @@ public class Cart {
 	}
 	
 	public void addCartItem(CartItem item) {
-		String bookId = item.getBook().getBookId();
-		
-		if(cartItems.containsKey(bookId)) {
+		String bookId = item.getBook().getBookId(); 
+
+		if(cartItems.containsKey(bookId)) {   
 			CartItem cartItem = cartItems.get(bookId);
-			cartItem.setQuantitiy(cartItem.getQuantity()+item.getQuantity());
-			cartItems.put(bookId, cartItem);
+			cartItem.setQuantity(cartItem.getQuantity()+item.getQuantity()); 
+			cartItems.put(bookId, cartItem); 
 		} else {
-			cartItems.put(bookId, item);
+			cartItems.put(bookId, item);  
 		}
-		
+		updateGrandTotal(); 
+	}
+	
+	public void removeCartItem(CartItem item) {
+		String bookId = item.getBook().getBookId();
+		cartItems.remove(bookId);
 		updateGrandTotal();
 	}
-
-	private void updateGrandTotal() {
-		// TODO Auto-generated method stub
-		
+	
+	public void updateGrandTotal() {
+		grandTotal= new BigDecimal(0);
+		for(CartItem item : cartItems.values()){
+			grandTotal = grandTotal.add(item.getTotalPrice());
+		}
 	}
 }

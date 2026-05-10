@@ -32,9 +32,18 @@ public class CartRepositoryImpl implements CartRepository {
 	public void update(String cartId, Cart cart) {
 		// TODO Auto-generated method stub
 		if(!listOfCarts.keySet().contains(cartId)) {
-			throw new IllegalArgumentException(String.format("장바구니 목록을 갱신할 수 없습니다. 장바구니 id(%)가 존재하지 않습니다.", cartId));
+			throw new IllegalArgumentException(String.format("장바구니 목록을 갱신할 수 없습니다. 장바구니 id(%)가 존재하지 않습니다",cartId));
 		}
 		listOfCarts.put(cartId, cart);
-		System.out.println("장바구니" + cart);
+		System.out.println("장바구니  "+  cart);
+	}
+
+	@Override
+	public void delete(String cartId) {
+		// TODO Auto-generated method stub
+		if(!listOfCarts.keySet().contains(cartId)) {
+			throw new IllegalArgumentException(String.format("장바구니 목록을 갱신할 수 없습니다. 장바구니 id(%)가 존재하지 않습니다",cartId));
+		}
+		listOfCarts.remove(cartId);
 	}
 }
