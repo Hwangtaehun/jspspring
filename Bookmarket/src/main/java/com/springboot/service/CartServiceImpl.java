@@ -34,4 +34,10 @@ public class CartServiceImpl implements CartService {
 		// TODO Auto-generated method stub
 		cartRepository.delete(cartId);
 	}
+
+	@Override
+	public Cart validateCart(String cartId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
